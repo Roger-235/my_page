@@ -1,3 +1,10 @@
+---
+const identity = {
+  occupation: "就讀高科大電子工程系一年級",
+  hobbies: ["程式設計", "j-pop", "動漫", "遊戲", "電腦", "健身", "腳踏車", "排球", "美股", "基本經濟概論", "哲學", "心理學"],
+};
+---
+
 <html lang="zh-cn">
 	<head>
 		<meta charset="UTF-8" />
@@ -11,6 +18,9 @@
 		<a href="/">home</a>
 		<a href="/about/">about me</menu></a>
 		<a href="/blog">blog</a>
-		<h1>Hello World!</h1>
+		<h1>關於我</h1>
+			<p>我是yo，但是似乎235更順耳所以也可以叫我235，目前{identity.occupation}</p>
+				<h4>關鍵字：{identity.hobbies.join(", ")}</h4>
+				<h3>對這個世界永遠保持好奇心</h3>
 	</body>
 </html>
