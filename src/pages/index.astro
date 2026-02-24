@@ -1,6 +1,8 @@
 ---
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -16,9 +18,8 @@ import Layout from '../layouts/Layout.astro';
 		<title>235's page</title>
 	</head>
 	<body>
-		<a href="/">home</a>
-		<a href="/about/">about me</menu></a>
-		<a href="/blog">blog</a>
-		<h1>Hello World!</h1>
+		<Navigation />
+		<h1>235's page</h1>
+		<Footer />
 	</body>
 </html>
