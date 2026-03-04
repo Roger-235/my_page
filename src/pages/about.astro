@@ -25,11 +25,23 @@ const skillcards = [
   <section class="about animate-in">
 
     <div class="about-header">
-      <div class="avatar">235</div>
-      <h1>關於我 <span class="deco">✿</span></h1>
+      <div class="header-ornament">
+        <span class="orn-line"></span>
+        <span class="orn-mark">✦</span>
+        <span class="orn-line"></span>
+      </div>
+      <h1>About 235</h1>
       <p class="occupation">{identity.occupation}</p>
     </div>
 
+
+	<div class="section-card">
+      <h2>關於 </h2>
+      <p>我是 yo，但是似乎 235 更順耳所以也可以叫我 235。</p>
+	  <p>目前{identity.occupation}</p>
+    </div>
+
+	
     <div class="section-card">
       <h2>關鍵字</h2>
       <div class="tags-wrap">
@@ -37,13 +49,9 @@ const skillcards = [
           <span class={`tag ${i % 3 === 1 ? 'lavender' : i % 3 === 2 ? 'mint' : ''}`}>{hobby}</span>
         ))}
       </div>
-    </div>
-
-    <div class="section-card">
-      <h2>關於 <span class="deco">✦</span></h2>
-      <p>我是 yo，但是似乎 235 更順耳所以也可以叫我 235。</p>
       <blockquote class="quote-inline">"對這個世界永遠保持好奇心"</blockquote>
     </div>
+
 
     {skillcards.filter(s => s.description).length > 0 && (
       <div class="section-card">
@@ -73,20 +81,24 @@ const skillcards = [
     padding: 2rem 0 2.5rem;
   }
 
-  .avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--pink), var(--lavender));
-    color: white;
-    font-size: 1.3rem;
-    font-weight: 700;
+  .header-ornament {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    box-shadow: 0 4px 20px rgba(244, 114, 182, 0.3);
-    animation: float 4s ease-in-out infinite;
+    gap: 1rem;
+    margin: 0 auto 1.5rem;
+    width: fit-content;
+  }
+
+  .orn-line {
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .orn-mark {
+    color: var(--pink);
+    font-size: 1rem;
   }
 
   .about-header h1 {
