@@ -1,24 +1,104 @@
 ---
-import Navigation from '../components/Navigation.astro';
+import Layout from '../layouts/Layout.astro';
+
+const posts = await Astro.glob('./posts/*.md');
+posts.sort((a, b) =>
+  new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime()
+);
 ---
-<html lang="zh-cn">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>235's page</title>
-		
-	</head>
-	<body>
-		<Navigation />
-		<h1>Hello World!</h1>
-		<p>This is my blog page.</p>
-		<ul>
-			<li>
-				<a href="/posts/hello-world">My first post</a>
-			</li>
-		</ul>
-	</body>
-</html>
+<Layout title="Blog · 235's page">
+  <section class="blog animate-in">
+
+    <div class="blog-header">
+      <h1>Blog <span class="deco">✦</span></h1>
+      <p class="subtitle">學習筆記 × 生活日常</p>
+    </div>
+
+    <div class="posts-list">
+      {posts.map(post => (
+        <a href={post.url} class="post-card card">
+          <div class="post-meta">
+            <span class="tag">
+              {new Date(post.frontmatter.pubDate).toLocaleDateString('zh-TW', {
+                year: 'numeric', month: 'long', day: 'numeric'
+              })}
+            </span>
+            {post.frontmatter.tags?.slice(0, 2).map((tag: string) => (
+              <span class="tag mint">#{tag}</span>
+            ))}
+          </div>
+          <h2 class="post-title">{post.frontmatter.title}</h2>
+          {post.frontmatter.description && (
+            <p class="post-desc">{post.frontmatter.description}</p>
+          )}
+          <span class="read-more">閱讀全文 →</span>
+        </a>
+      ))}
+    </div>
+
+  </section>
+</Layout>
+
+<style>
+  .blog {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .blog-header {
+    text-align: center;
+    padding: 2rem 0 2.5rem;
+  }
+
+  .blog-header h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .deco { color: var(--pink); }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .post-card {
+    display: block;
+    color: inherit;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+
+  .post-title {
+    font-size: 1.35rem;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+    transition: color var(--transition);
+  }
+  .post-card:hover .post-title {
+    color: var(--pink);
+  }
+
+  .post-desc {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .read-more {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--pink);
+  }
+</style>

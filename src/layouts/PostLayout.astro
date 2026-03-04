@@ -1,0 +1,131 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    pubDate: string;
+    description?: string;
+    author?: string;
+    tags?: string[];
+    image?: { url: string; alt: string };
+  };
+}
+
+const { frontmatter } = Astro.props;
+const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<Layout title={`${frontmatter.title} · 235's blog`}>
+  <article class="post animate-in">
+    {frontmatter.image && (
+      <div class="post-hero">
+        <img src={frontmatter.image.url} alt={frontmatter.image.alt} />
+      </div>
+    )}
+
+    <div class="post-header">
+      <div class="post-meta">
+        <span class="tag">{date}</span>
+        {frontmatter.author && <span class="tag lavender">by {frontmatter.author}</span>}
+      </div>
+      <h1 class="post-title">{frontmatter.title}</h1>
+      {frontmatter.description && <p class="post-desc">{frontmatter.description}</p>}
+      {frontmatter.tags && (
+        <div class="post-tags">
+          {frontmatter.tags.map(tag => <span class="tag mint">#{tag}</span>)}
+        </div>
+      )}
+    </div>
+
+    <div class="post-content">
+      <slot />
+    </div>
+
+    <div class="post-footer">
+      <a href="/blog" class="btn btn-outline">← back to blog</a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .post-hero {
+    margin-bottom: 2rem;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .post-hero img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+  .post-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .post-title {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, var(--pink), var(--lavender));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .post-desc {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .post-content {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem 2.5rem;
+    box-shadow: var(--shadow);
+    line-height: 1.9;
+    margin-bottom: 2rem;
+  }
+
+  .post-content :global(h1),
+  .post-content :global(h2),
+  .post-content :global(h3) {
+    margin: 1.5rem 0 0.75rem;
+  }
+  .post-content :global(p) {
+    margin-bottom: 1.25rem;
+  }
+  .post-content :global(strong) {
+    color: var(--pink);
+  }
+  .post-content :global(del) {
+    color: var(--text-muted);
+  }
+
+  .post-footer {
+    text-align: center;
+  }
+</style>

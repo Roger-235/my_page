@@ -1,4 +1,5 @@
 ---
+layout: '../../layouts/PostLayout.astro'
 title: 'Hello world'
 pubDate: '2026-02-15'
 description: 'this is my first post in my blog'

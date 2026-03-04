@@ -1,50 +1,152 @@
 ---
-import Navigation from '../components/Navigation.astro';
-import '../style/global.css';
-import Menu from '../components/Menu.astro';
+import Layout from '../layouts/Layout.astro';
+
 const identity = {
   occupation: "就讀高科大電子工程系一年級",
   hobbies: ["程式設計", "j-pop", "動漫", "遊戲", "電腦", "健身", "腳踏車", "排球", "美股", "基本經濟概論", "哲學", "心理學"],
 };
+
 const skillcards = [
   {
-	name: "程式設計",
-	description: "高三開始接觸程式的一個新手小白，對演算法跟ai的基本概論有興趣，被各位大神電爛之後正在高速成長中...",
+    name: "程式設計",
+    description: "高三開始接觸程式的一個新手小白，對演算法跟ai的基本概論有興趣，被各位大神電爛之後正在高速成長中...",
   },
   {
-	name: "j-pop",
-	description: "",
+    name: "j-pop",
+    description: "",
   },
   {
-	name: "動漫",
-	description: "",
+    name: "動漫",
+    description: "",
   },
 ];
 ---
+<Layout title="關於我 · 235's page">
+  <section class="about animate-in">
 
-<html lang="zh-cn">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>235's page</title>
-		<style>
-      	h1 {
-      	  color: blue;
-      	  font-size: 4rem;
-		}
-    	</style>
-	</head>
-	<body>
-		<script src="../script/menu.js"></script>
-		<Menu />
-		<Navigation />
+    <div class="about-header">
+      <div class="avatar">235</div>
+      <h1>關於我 <span class="deco">✿</span></h1>
+      <p class="occupation">{identity.occupation}</p>
+    </div>
 
-		<h1>關於我</h1>
-			<p>我是yo，但是似乎235更順耳所以也可以叫我235，目前{identity.occupation}</p>
-				<h4>關鍵字：{identity.hobbies.join(", ")}</h4>
-				<h3>"對這個世界永遠保持好奇心"</h3>
-	</body>
-</html>
+    <div class="section-card">
+      <h2>關鍵字</h2>
+      <div class="tags-wrap">
+        {identity.hobbies.map((hobby, i) => (
+          <span class={`tag ${i % 3 === 1 ? 'lavender' : i % 3 === 2 ? 'mint' : ''}`}>{hobby}</span>
+        ))}
+      </div>
+    </div>
+
+    <div class="section-card">
+      <h2>關於 <span class="deco">✦</span></h2>
+      <p>我是 yo，但是似乎 235 更順耳所以也可以叫我 235。</p>
+      <blockquote class="quote-inline">"對這個世界永遠保持好奇心"</blockquote>
+    </div>
+
+    {skillcards.filter(s => s.description).length > 0 && (
+      <div class="section-card">
+        <h2>技能</h2>
+        <div class="skill-grid">
+          {skillcards.filter(s => s.description).map(skill => (
+            <div class="card skill-card">
+              <h3>{skill.name}</h3>
+              <p>{skill.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+  </section>
+</Layout>
+
+<style>
+  .about {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .about-header {
+    text-align: center;
+    padding: 2rem 0 2.5rem;
+  }
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--lavender));
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 20px rgba(244, 114, 182, 0.3);
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .about-header h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .deco { color: var(--pink); }
+
+  .occupation {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .section-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow);
+  }
+
+  .section-card h2 {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .quote-inline {
+    display: block;
+    margin-top: 0.75rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--pink);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .skill-grid {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .skill-card h3 {
+    color: var(--pink);
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .skill-card p {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+</style>
