@@ -21,23 +21,18 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
 ---
 <Layout title={`${frontmatter.title} · 235's blog`}>
   <article class="post animate-in">
-    <div class="post-banner">
-      <span class="banner-rule">── ✦ ──</span>
-      <h1 class="banner-title">{frontmatter.title}</h1>
-      <span class="banner-rule">── ✦ ──</span>
-    </div>
 
-    <div class="post-header">
-      <div class="post-meta">
-        <span class="tag">{date}</span>
-        {frontmatter.author && <span class="tag lavender">by {frontmatter.author}</span>}
-      </div>
-      {frontmatter.description && <p class="post-desc">{frontmatter.description}</p>}
-      {frontmatter.tags && (
-        <div class="post-tags">
-          {frontmatter.tags.map(tag => <span class="tag mint">#{tag}</span>)}
-        </div>
-      )}
+    <div class="post-banner">
+      <p class="banner-eyebrow">
+        Blog
+        {frontmatter.tags?.map(tag => <span class="tag mint">#{tag}</span>)}
+      </p>
+      <h1 class="banner-title">{frontmatter.title}</h1>
+      <p class="banner-meta">
+        <span>{date}</span>
+        {frontmatter.description && <span>· {frontmatter.description}</span>}
+        {frontmatter.author && <span>· by {frontmatter.author}</span>}
+      </p>
     </div>
 
     <div class="post-content">
@@ -45,8 +40,9 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
     </div>
 
     <div class="post-footer">
-      <a href="/blog" class="btn btn-outline">← back to blog</a>
+      <a href="/blog" class="btn btn-outline">← Back to Blog</a>
     </div>
+
   </article>
 </Layout>
 
@@ -57,110 +53,77 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
   }
 
   .post-banner {
-    height: 200px;
-    margin-bottom: 2rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    background: linear-gradient(135deg, #f3dfc8 0%, #e8c89a 50%, #d4a96a 100%);
+    padding: 3rem 0 2rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 2.5rem;
+  }
+
+  .banner-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* diagonal stripe texture */
-  .post-banner::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 12px,
-      rgba(255, 255, 255, 0.07) 12px,
-      rgba(255, 255, 255, 0.07) 13px
-    );
-  }
-
-  /* inner frame */
-  .post-banner::after {
-    content: '';
-    position: absolute;
-    inset: 10px;
-    border: 1px solid rgba(61, 44, 30, 0.15);
-    border-radius: calc(var(--radius) - 4px);
+    gap: 0.5rem;
   }
 
   .banner-title {
     font-family: 'EB Garamond', serif;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-size: clamp(2.4rem, 6vw, 4rem);
     font-weight: 700;
-    color: rgba(61, 44, 30, 0.72);
-    z-index: 1;
-    text-align: center;
-    padding: 0 2rem;
-    line-height: 1.25;
-  }
-
-  .banner-rule {
-    color: rgba(61, 44, 30, 0.3);
-    font-size: 0.8rem;
-    letter-spacing: 0.5em;
-    z-index: 1;
-  }
-
-  .post-header {
-    margin-bottom: 2rem;
-  }
-  .post-meta {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    color: var(--text);
+    line-height: 1.1;
     margin-bottom: 1rem;
   }
 
-  .post-desc {
+  .banner-meta {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-size: 1.3rem;
     color: var(--text-muted);
-    font-size: 1.05rem;
-    margin-bottom: 1rem;
-  }
-
-  .post-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
   }
 
   .post-content {
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2rem 2.5rem;
-    box-shadow: var(--shadow);
     line-height: 1.9;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    font-size: 1.05rem;
   }
 
   .post-content :global(h1),
   .post-content :global(h2),
   .post-content :global(h3) {
-    margin: 1.5rem 0 0.75rem;
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
   }
   .post-content :global(p) {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.4rem;
   }
   .post-content :global(strong) {
-    color: var(--pink);
+    color: var(--text);
+    font-weight: 700;
   }
   .post-content :global(del) {
     color: var(--text-muted);
   }
+  .post-content :global(blockquote) {
+    border-left: 3px solid var(--pink);
+    padding-left: 1.5rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+    font-size: 1.15rem;
+    margin: 1.5rem 0;
+  }
 
   .post-footer {
-    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
   }
 </style>

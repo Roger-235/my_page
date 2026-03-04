@@ -25,13 +25,9 @@ const skillcards = [
   <section class="about animate-in">
 
     <div class="about-header">
-      <div class="header-ornament">
-        <span class="orn-line"></span>
-        <span class="orn-mark">✦</span>
-        <span class="orn-line"></span>
-      </div>
+      
       <h1>About 235</h1>
-      <p class="occupation">{identity.occupation}</p>
+      <p class="occupation">一個成分複雜的人類...</p>
     </div>
 
 
@@ -77,57 +73,54 @@ const skillcards = [
   }
 
   .about-header {
-    text-align: center;
-    padding: 2rem 0 2.5rem;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 0;
   }
 
   .header-ornament {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin: 0 auto 1.5rem;
+    margin-bottom: 1.25rem;
     width: fit-content;
   }
 
   .orn-line {
     display: block;
-    width: 60px;
+    width: 40px;
     height: 1px;
     background: var(--border);
   }
 
   .orn-mark {
     color: var(--pink);
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .about-header h1 {
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
   }
-
-  .deco { color: var(--pink); }
 
   .occupation {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
   }
 
   .section-card {
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.75rem;
-    margin-bottom: 1.25rem;
-    box-shadow: var(--shadow);
+    border-top: 1px solid var(--border);
+    padding: 1.75rem 0;
   }
 
   .section-card h2 {
-    font-size: 1rem;
+    font-size: 1.7rem;
     color: var(--text-muted);
-    font-weight: 500;
+    font-weight: 700;
     margin-bottom: 1rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.15em;
+    font-family: 'Jost', sans-serif;
   }
 
   .tags-wrap {
@@ -138,20 +131,26 @@ const skillcards = [
 
   .quote-inline {
     display: block;
-    margin-top: 0.75rem;
+    margin-top: 1.25rem;
     padding-left: 1rem;
-    border-left: 3px solid var(--pink);
+    border-left: 2px solid var(--pink);
     color: var(--text-muted);
     font-style: italic;
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
   }
 
   .skill-grid {
     display: grid;
-    gap: 0.75rem;
+    gap: 1rem;
+  }
+
+  .skill-card {
+    border-top: 2px solid var(--text) !important;
   }
 
   .skill-card h3 {
-    color: var(--pink);
+    color: var(--text);
     font-size: 1rem;
     margin-bottom: 0.4rem;
   }
@@ -161,4 +160,5 @@ const skillcards = [
     font-size: 0.93rem;
     line-height: 1.65;
   }
+
 </style>
