@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+const categoryMap = posts.reduce((acc: Record<string, number>, post) => {
+  if (post.data.category) {
+    acc[post.data.category] = (acc[post.data.category] || 0) + 1;
+  }
+  return acc;
+}, {});
+
+const categories = Object.entries(categoryMap).sort((a, b) => b[1] - a[1]);
+---
+<Layout title="Categories · 235's blog">
+  <section class="chip-page animate-in">
+
+    <div class="page-header">
+      <div class="page-eyebrow">Browse</div>
+      <h1>Categories</h1>
+      <p class="subtitle">{categories.length} 個分類</p>
+    </div>
+
+    <div class="chip-grid">
+      {categories.map(([name, count]) => (
+        <a href={`/categories/${encodeURIComponent(name)}`} class="chip-item">
+          <span class="chip-name">{name}</span>
+          <span class="chip-count">{count}</span>
+        </a>
+      ))}
+    </div>
+
+  </section>
+</Layout>
+
+<style>
+  .chip-page {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .page-header {
+    padding: 2rem 0 2rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 2rem;
+  }
+  .page-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+  .page-header h1 { margin-bottom: 0.25rem; }
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+  }
+  .chip-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .chip-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    border: 1.5px solid var(--lavender);
+    border-radius: var(--radius-sm);
+    color: var(--lavender);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all var(--transition);
+  }
+  .chip-item:hover {
+    background: var(--lavender);
+    color: var(--bg);
+  }
+  .chip-count {
+    font-size: 0.7rem;
+    opacity: 0.75;
+  }
+</style>

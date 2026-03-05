@@ -1,21 +1,34 @@
 ---
 import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap(p => p.data.tags))];
+  return tags.map(tag => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter(p => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
 ---
-<Layout title="Blog · 235's page">
-  <section class="blog animate-in">
+<Layout title={`#${tag} · 235's blog`}>
+  <section class="chip-page animate-in">
 
-    <div class="blog-header">
-      <div class="blog-eyebrow">Archive</div>
-      <h1>Blog</h1>
-      <p class="subtitle">學習筆記 × 生活日常</p>
+    <div class="page-header">
+      <div class="page-eyebrow"><a href="/tags">Tags</a></div>
+      <h1>#{tag}</h1>
+      <p class="subtitle">{posts.length} 篇文章</p>
     </div>
 
     <div class="posts-list">
-      {posts.map(post => (
+      {posts.map((post: any) => (
         <a href={`/posts/${post.slug}`} class="post-item">
           <div class="post-date">
             {post.data.pubDate.toLocaleDateString('zh-TW', {
@@ -24,12 +37,7 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
           </div>
           <div class="post-body">
             <h2 class="post-title">{post.data.title}</h2>
-            {post.data.description && (
-              <p class="post-desc">{post.data.description}</p>
-            )}
-            {post.data.category && (
-              <span class="post-category">{post.data.category}</span>
-            )}
+            {post.data.description && <p class="post-desc">{post.data.description}</p>}
           </div>
           <span class="post-arrow">→</span>
         </a>
@@ -40,18 +48,13 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
 </Layout>
 
 <style>
-  .blog {
-    max-width: 680px;
-    margin: 0 auto;
-  }
-
-  .blog-header {
+  .chip-page { max-width: 680px; margin: 0 auto; }
+  .page-header {
     padding: 2rem 0 2rem;
     border-bottom: 2px solid var(--text);
     margin-bottom: 0;
   }
-
-  .blog-eyebrow {
+  .page-eyebrow {
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -59,23 +62,16 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
     color: var(--text-muted);
     margin-bottom: 0.5rem;
   }
-
-  .blog-header h1 {
-    margin-bottom: 0.25rem;
-  }
-
+  .page-eyebrow a { color: var(--text-muted); }
+  .page-eyebrow a:hover { color: var(--pink); }
+  .page-header h1 { margin-bottom: 0.25rem; }
   .subtitle {
     color: var(--text-muted);
     font-size: 0.93rem;
     font-style: italic;
     font-family: 'EB Garamond', serif;
   }
-
-  .posts-list {
-    display: flex;
-    flex-direction: column;
-  }
-
+  .posts-list { display: flex; flex-direction: column; }
   .post-item {
     display: grid;
     grid-template-columns: 6.5rem 1fr auto;
@@ -89,19 +85,12 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
   }
   .post-item:hover .post-title { color: var(--pink); }
   .post-item:hover .post-arrow { color: var(--pink); }
-
   .post-title, .post-desc, .post-date {
     transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), color var(--transition);
   }
-  .post-arrow {
-    transition: color var(--transition);
-  }
   .post-item:hover .post-title,
   .post-item:hover .post-desc,
-  .post-item:hover .post-date {
-    transform: translateX(14px);
-  }
-
+  .post-item:hover .post-date { transform: translateX(14px); }
   .post-date {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -109,7 +98,6 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
     padding-top: 0.3rem;
     letter-spacing: 0.02em;
   }
-
   .post-title {
     font-family: 'EB Garamond', serif;
     font-size: 1.4rem;
@@ -118,36 +106,15 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
     margin-bottom: 0.3rem;
     line-height: 1.3;
   }
-
-  .post-desc {
-    color: var(--text-muted);
-    font-size: 0.88rem;
-    line-height: 1.6;
-    margin-bottom: 0.3rem;
-  }
-
-  .post-category {
-    display: inline-block;
-    padding: 0.1rem 0.45rem;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--lavender);
-    color: var(--lavender);
-    font-family: 'EB Garamond', serif;
-    font-size: 0.9rem;
-    font-style: italic;
-  }
-
+  .post-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
   .post-arrow {
     color: var(--border);
     font-size: 1.1rem;
     padding-top: 0.25rem;
     transition: color var(--transition);
   }
-
   @media (max-width: 480px) {
-    .post-item {
-      grid-template-columns: 1fr auto;
-    }
+    .post-item { grid-template-columns: 1fr auto; }
     .post-date { display: none; }
   }
 </style>

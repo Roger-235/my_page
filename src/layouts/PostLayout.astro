@@ -8,7 +8,9 @@ interface Props {
     description?: string;
     author?: string;
     tags?: string[];
+    category?: string;
     image?: { url: string; alt: string };
+    readingTime?: { time: number; wordCount: number };
   };
 }
 
@@ -23,11 +25,16 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
   <article class="post animate-in">
 
     <div class="post-banner">
-      <p class="banner-eyebrow">
-        Blog
-        {frontmatter.tags?.map(tag => <span class="tag mint">#{tag}</span>)}
-      </p>
       <h1 class="banner-title">{frontmatter.title}</h1>
+      <p class="banner-eyebrow">
+        {frontmatter.category
+          ? <a href={`/categories/${encodeURIComponent(frontmatter.category)}`} class="tag lavender">{frontmatter.category}</a>
+          : <span>Blog</span>
+        }
+        {frontmatter.tags?.map(tag => (
+          <a href={`/tags/${encodeURIComponent(tag)}`} class="tag mint">#{tag}</a>
+        ))}
+      </p>
       <p class="banner-meta">
         <span>{date}</span>
         {frontmatter.description && <span>· {frontmatter.description}</span>}
@@ -59,10 +66,9 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
   }
 
   .banner-eyebrow {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
     color: var(--text-muted);
     margin-bottom: 1rem;
     display: flex;

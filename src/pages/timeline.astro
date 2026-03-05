@@ -1,13 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
-const posts = await Astro.glob('./posts/*.md');
-posts.sort((a, b) =>
-  new Date(b.frontmatter.pubDate).getTime() - new Date(a.frontmatter.pubDate).getTime()
-);
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
 const byYear = posts.reduce((acc: Record<string, typeof posts>, post) => {
-  const year = new Date(post.frontmatter.pubDate).getFullYear().toString();
+  const year = post.data.pubDate.getFullYear().toString();
   if (!acc[year]) acc[year] = [];
   acc[year].push(post);
   return acc;
@@ -28,17 +27,17 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
       <div class="year-group">
         <div class="year-label">{year}</div>
         <div class="year-posts">
-          {byYear[year].map((post: any) => (
-            <a href={post.url} class="tl-item">
+          {byYear[year].map(post => (
+            <a href={`/posts/${post.slug}`} class="tl-item">
               <span class="tl-date">
-                {new Date(post.frontmatter.pubDate).toLocaleDateString('en', {
+                {post.data.pubDate.toLocaleDateString('en', {
                   month: 'short', day: 'numeric'
                 })}
               </span>
               <div class="tl-body">
-                <p class="tl-title">{post.frontmatter.title}</p>
-                {post.frontmatter.description && (
-                  <p class="tl-desc">{post.frontmatter.description}</p>
+                <p class="tl-title">{post.data.title}</p>
+                {post.data.description && (
+                  <p class="tl-desc">{post.data.description}</p>
                 )}
               </div>
               <span class="tl-arrow">→</span>

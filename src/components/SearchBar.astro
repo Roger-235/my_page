@@ -1,0 +1,217 @@
+---
+---
+<div class="search-wrapper">
+  <button id="search-toggle" class="search-btn" aria-label="搜尋">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+  </button>
+
+  <div id="search-modal" class="search-modal" hidden>
+    <div class="search-backdrop"></div>
+    <div class="search-container">
+      <div id="search-input-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="search-icon">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input id="search-input" type="text" placeholder="搜尋文章…" autocomplete="off" />
+        <button id="search-close" class="close-btn" aria-label="關閉">✕</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    let pagefind = null;
+
+    async function initPagefind() {
+      if (!pagefind) {
+        pagefind = await import('/pagefind/pagefind.js');
+        await pagefind.init();
+      }
+    }
+
+    function openSearch() {
+      const modal = document.getElementById('search-modal');
+      const input = document.getElementById('search-input');
+      modal?.removeAttribute('hidden');
+      input?.focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    window._closeSearch = function() {
+      const modal = document.getElementById('search-modal');
+      const input = document.getElementById('search-input');
+      const results = document.getElementById('search-results');
+      modal?.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+      if (input) input.value = '';
+      if (results) results.innerHTML = '';
+    };
+
+    document.getElementById('search-toggle')?.addEventListener('click', async () => {
+      await initPagefind();
+      openSearch();
+    });
+
+    document.getElementById('search-close')?.addEventListener('click', window._closeSearch);
+    document.querySelector('.search-backdrop')?.addEventListener('click', window._closeSearch);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') window._closeSearch();
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        initPagefind().then(openSearch);
+      }
+    });
+
+    document.getElementById('search-input')?.addEventListener('input', async function() {
+      const query = this.value.trim();
+      const results = document.getElementById('search-results');
+      if (!results) return;
+      if (!query) { results.innerHTML = ''; return; }
+
+      const search = await pagefind.search(query);
+      const data = await Promise.all(search.results.slice(0, 8).map(r => r.data()));
+
+      if (data.length === 0) {
+        results.innerHTML = '<p class="no-results">沒有找到相關文章</p>';
+        return;
+      }
+
+      results.innerHTML = data.map(item => `
+        <a href="${item.url}" class="result-item" onclick="window._closeSearch()">
+          <p class="result-title">${item.meta?.title || '無標題'}</p>
+          <p class="result-excerpt">${item.excerpt}</p>
+        </a>
+      `).join('');
+    });
+  })();
+</script>
+
+<style>
+  .search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.6rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .search-btn:hover {
+    border-color: var(--text);
+    color: var(--text);
+  }
+
+  .search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 6rem;
+  }
+  .search-modal[hidden] { display: none; }
+
+  .search-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 16, 8, 0.5);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-container {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 1rem;
+    background: var(--bg);
+    border: 2px solid var(--text);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  #search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-icon { color: var(--text-muted); flex-shrink: 0; }
+
+  #search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  #search-input::placeholder { color: var(--text-muted); }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+    transition: color var(--transition);
+  }
+  .close-btn:hover { color: var(--text); }
+
+  #search-results {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .result-item {
+    display: block;
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: inherit;
+    text-decoration: none;
+    transition: background var(--transition);
+  }
+  .result-item:hover { background: var(--surface); }
+  .result-item:last-child { border-bottom: none; }
+
+  .result-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .result-excerpt {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .result-excerpt :global(mark) {
+    background: var(--pink-light);
+    color: var(--pink);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .no-results {
+    padding: 1.5rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    text-align: center;
+  }
+</style>

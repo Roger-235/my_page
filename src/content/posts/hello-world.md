@@ -1,9 +1,10 @@
 ---
-layout: '../../layouts/PostLayout.astro'
 title: 'Hello world!!!'
-pubDate: '2026-02-15'
+pubDate: 2026-02-15
 description: 'First post in my blog'
 author: '235'
+tags: [first]
+category: 'learning'
 ---
 
 高三才開始接觸程式，沒想到這時候就要開始架自己的blog，進度好像比我想像的快...

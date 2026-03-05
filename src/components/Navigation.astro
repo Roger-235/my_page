@@ -1,12 +1,16 @@
 ---
+import SearchBar from './SearchBar.astro';
 ---
 <nav class="navbar">
   <a href="/" class="nav-logo">235 </a>
   <button class="menu" aria-expanded="false" aria-controls="main-menu">☰</button>
   <div id="main-menu" class="nav-links">
     <a href="/">home</a>
-    <a href="/about/">about</a>
     <a href="/blog">blog</a>
     <a href="/timeline">timeline</a>
+    <a href="/categories">categories</a>
+    <a href="/tags">tags</a>
+    <a href="/about/">about</a>
   </div>
+  <SearchBar />
 </nav>

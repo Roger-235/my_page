@@ -1,0 +1,28 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  return posts.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, remarkPluginFrontmatter } = await render(entry);
+const readingTime = remarkPluginFrontmatter?.readingMetadata;
+---
+
+<PostLayout frontmatter={{
+  title: entry.data.title,
+  pubDate: entry.data.pubDate.toISOString(),
+  description: entry.data.description,
+  author: entry.data.author,
+  tags: entry.data.tags,
+  category: entry.data.category,
+  readingTime,
+}}>
+  <Content />
+</PostLayout>
