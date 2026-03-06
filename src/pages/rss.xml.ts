@@ -8,7 +8,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: "235's Blog",
-    description: '一個成分複雜的人類的碎碎念',
+    description: '今天又更新了一點東西',
     site: context.site!,
     items: posts.map(post => ({
       title: post.data.title,
