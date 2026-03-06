@@ -9,7 +9,7 @@ export default defineConfig({
   site: 'https://235blog.netlify.app/',
   devToolbar: { enabled: false },
   integrations: [sitemap(), pagefind()],
-  markdown: 
+  markdown: {
     remarkPlugins: [remarkReadingTime],
     shikiConfig: {
       theme: 'github-dark-default',
