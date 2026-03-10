@@ -269,3 +269,31 @@ footer a:hover { color: var(--lavender); }
 .animate-in {
   animation: fadeInUp 0.55s ease forwards;
 }
+
+/* ---- Code blocks ---- */
+pre.astro-code {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--mint);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+:not(pre) > code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.1em 0.4em;
+  font-size: 0.85em;
+  color: var(--pink);
+}
+
+mark {
+  background: #e8b48a;
+  color: #1a1008;
+  border-radius: var(--radius-sm);
+  padding: 0.05em 0.25em;
+}

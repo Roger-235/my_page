@@ -1,0 +1,290 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const allTags = [...new Set(notes.flatMap(n => n.data.tags))].sort();
+---
+<Layout title="Notes · 235's page">
+  <section class="notes animate-in">
+
+    <div class="notes-header">
+      <h1>Notes</h1>
+      <p class="subtitle">所到之處  留下痕跡</p>
+    </div>
+
+    {allTags.length > 0 && (
+      <div class="tag-filter" id="tag-filter">
+        <button class="filter-tag active" data-tag="*">All</button>
+        {allTags.map(tag => (
+          <button class="filter-tag" data-tag={tag}>#{tag}</button>
+        ))}
+      </div>
+    )}
+
+    <div class="cards-grid" id="cards-grid">
+      {notes.map((note, i) => (
+        <a
+          href={`/notes/${note.slug}`}
+          class="note-card"
+          data-tags={note.data.tags.join(',')}
+        >
+          <div class="card-top">
+            <span class="card-num">{String(notes.length - i).padStart(2, '0')}</span>
+            <div class="card-dates">
+              <span class="card-date">
+                {note.data.pubDate.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })}
+              </span>
+              {note.data.updatedDate && (
+                <span class="card-updated" title="最後編輯">
+                  edited {note.data.updatedDate.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })}
+                </span>
+              )}
+            </div>
+          </div>
+          <h2 class="card-title">{note.data.title}</h2>
+          {note.data.description && (
+            <p class="card-desc">{note.data.description}</p>
+          )}
+          <div class="card-footer">
+            <div class="card-tags">
+              {note.data.tags.map(tag => (
+                <span class="itag">#{tag}</span>
+              ))}
+            </div>
+            <span class="card-arrow">↗</span>
+          </div>
+        </a>
+      ))}
+
+      {notes.length === 0 && (
+        <p class="empty">還沒有筆記。</p>
+      )}
+    </div>
+
+    <p class="no-match" id="no-match" hidden>沒有符合的筆記。</p>
+
+  </section>
+</Layout>
+
+<script>
+  const filterBar = document.getElementById('tag-filter');
+  const grid = document.getElementById('cards-grid');
+  const noMatch = document.getElementById('no-match');
+
+  filterBar?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-tag');
+    if (!btn) return;
+
+    filterBar.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const selected = btn.dataset.tag ?? '*';
+    const cards = grid?.querySelectorAll<HTMLElement>('.note-card') ?? [];
+    let visible = 0;
+
+    cards.forEach(card => {
+      const tags = card.dataset.tags?.split(',') ?? [];
+      const show = selected === '*' || tags.includes(selected);
+      card.hidden = !show;
+      if (show) visible++;
+    });
+
+    if (noMatch) noMatch.hidden = visible > 0;
+  });
+</script>
+
+<style>
+  .notes {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .notes-header {
+    padding: 2rem 0 2.5rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 2rem;
+  }
+
+  .notes-header h1 {
+    margin-bottom: 0.2rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+  }
+
+  /* ── Tag filter ── */
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-tag {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 1rem;
+    font-size: 0.9rem;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .filter-tag:hover {
+    border-color: var(--mint);
+    color: var(--mint);
+  }
+
+  .filter-tag.active {
+    background: var(--mint);
+    border-color: var(--mint);
+    color: var(--bg);
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  /* ── Grid ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    border: 1px solid var(--text);
+  }
+
+  /* ── Card ── */
+  .note-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.4rem 1.5rem 1.2rem;
+    border: 1px solid transparent;
+    outline: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    background: var(--bg);
+    transition: background var(--transition), outline-color var(--transition);
+    min-height: 180px;
+  }
+
+  .note-card[hidden] { display: none; }
+
+  .note-card:hover {
+    background: var(--surface);
+    outline-color: var(--mint);
+    z-index: 1;
+  }
+
+  .note-card:hover .card-title { color: var(--mint); }
+  .note-card:hover .card-arrow { color: var(--mint); }
+
+  /* ── Card parts ── */
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-dates {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.1rem;
+  }
+
+  .card-date {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+
+  .card-updated {
+    font-size: 0.62rem;
+    color: var(--mint);
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+  }
+
+  .card-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text);
+    transition: color var(--transition);
+    flex: 1;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .itag {
+    font-size: 0.72rem;
+    color: var(--mint);
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+  }
+
+  .card-arrow {
+    font-size: 1rem;
+    color: var(--border);
+    transition: color var(--transition);
+    line-height: 1;
+  }
+
+  .empty, .no-match {
+    grid-column: 1 / -1;
+    padding: 3rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+  }
+
+  .no-match { padding: 1.5rem 0; }
+  .no-match[hidden] { display: none; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 400px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+</style>

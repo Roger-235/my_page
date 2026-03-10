@@ -3,12 +3,18 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .map(p => ({ ...p, type: 'post' as const, url: `/posts/${p.slug}` }));
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .map(n => ({ ...n, type: 'note' as const, url: `/notes/${n.slug}` }));
+
+const all = [...posts, ...notes]
   .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 
-const byYear = posts.reduce((acc: Record<string, typeof posts>, post) => {
-  const year = post.data.pubDate.getFullYear().toString();
+const byYear = all.reduce((acc: Record<string, typeof all>, item) => {
+  const year = item.data.pubDate.getFullYear().toString();
   if (!acc[year]) acc[year] = [];
-  acc[year].push(post);
+  acc[year].push(item);
   return acc;
 }, {});
 
@@ -27,17 +33,20 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
       <div class="year-group">
         <div class="year-label">{year}</div>
         <div class="year-posts">
-          {byYear[year].map(post => (
-            <a href={`/posts/${post.slug}`} class="tl-item">
+          {byYear[year].map(item => (
+            <a href={item.url} class={`tl-item tl-${item.type}`}>
               <span class="tl-date">
-                {post.data.pubDate.toLocaleDateString('en', {
+                {item.data.pubDate.toLocaleDateString('en', {
                   month: 'short', day: 'numeric'
                 })}
               </span>
               <div class="tl-body">
-                <p class="tl-title">{post.data.title}</p>
-                {post.data.description && (
-                  <p class="tl-desc">{post.data.description}</p>
+                <p class="tl-title">
+                  {item.type === 'note' && <span class="tl-type-badge">note</span>}
+                  {item.data.title}
+                </p>
+                {item.data.description && (
+                  <p class="tl-desc">{item.data.description}</p>
                 )}
               </div>
               <span class="tl-arrow">→</span>
@@ -110,7 +119,7 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
     grid-template-columns: 4rem 1fr auto;
     gap: 0 1.25rem;
     align-items: start;
-    padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+    padding: 0.5rem 1.5rem 0.5rem 1.75rem;
     border-bottom: 1px solid var(--border);
     color: inherit;
     text-decoration: none;
@@ -144,8 +153,31 @@ const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a));
     box-shadow: 0 0 0 1px var(--pink);
   }
 
-  .tl-item:hover .tl-title { color: var(--pink); }
-  .tl-item:hover .tl-arrow { color: var(--pink); }
+  .tl-post:hover .tl-title { color: var(--pink); }
+  .tl-post:hover .tl-arrow { color: var(--pink); }
+  .tl-note:hover .tl-title { color: var(--mint); }
+  .tl-note:hover .tl-arrow { color: var(--mint); }
+
+  .tl-note::before {
+    background: var(--mint);
+    box-shadow: 0 0 0 1px var(--mint);
+  }
+
+  .tl-type-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mint);
+    border: 1px solid var(--mint);
+    border-radius: var(--radius-sm);
+    padding: 0.05rem 0.35rem;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    position: relative;
+    top: -0.1em;
+  }
 
   .tl-date {
     font-size: 0.75rem;

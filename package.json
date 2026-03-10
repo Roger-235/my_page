@@ -12,7 +12,8 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "astro": "^5.17.1",
-    "astro-pagefind": "^1.8.5"
+    "astro-pagefind": "^1.8.5",
+    "remark-mark": "^0.0.0"
   },
   "devDependencies": {
     "mdast-util-to-string": "^4.0.0",

@@ -1,0 +1,197 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    pubDate: string;
+    description?: string;
+    tags?: string[];
+    updatedDate?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const updatedDate = frontmatter.updatedDate
+  ? new Date(frontmatter.updatedDate).toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+---
+<Layout title={`${frontmatter.title} · 235's notes`}>
+  <article class="note animate-in">
+
+    <div class="note-banner">
+      <p class="note-eyebrow">
+        <a href="/notes" class="back-link">Notes</a>
+        {frontmatter.tags?.map(tag => (
+          <a href={`/tags/${encodeURIComponent(tag)}`} class="tag mint">#{tag}</a>
+        ))}
+      </p>
+      <h1 class="note-title">{frontmatter.title}</h1>
+      <div class="note-meta">
+        {frontmatter.description && (
+          <p class="meta-desc">{frontmatter.description}</p>
+        )}
+        <dl class="meta-dates">
+          <div class="meta-row">
+            <dt>Published</dt>
+            <dd>{date}</dd>
+          </div>
+          {updatedDate && (
+            <div class="meta-row">
+              <dt>Updated</dt>
+              <dd class="updated">{updatedDate}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
+    </div>
+
+    <div class="note-content">
+      <slot />
+    </div>
+
+    <div class="note-footer">
+      <a href="/notes" class="btn btn-outline">← Back to Notes</a>
+    </div>
+
+  </article>
+</Layout>
+
+
+<style>
+  .note {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .note-banner {
+    padding: 3rem 0 2rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 2.5rem;
+  }
+
+  .note-eyebrow {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .back-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .back-link:hover { color: var(--mint); }
+
+  .note-title {
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .note-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .meta-desc {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .meta-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    border-left: 2px solid var(--border);
+    padding-left: 0.85rem;
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .meta-row dt {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--border);
+    width: 4.5rem;
+    flex-shrink: 0;
+  }
+
+  .meta-row dd {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta-row dd.updated {
+    color: var(--mint);
+  }
+
+  .note-content {
+    line-height: 1.85;
+  }
+
+  .note-content :global(h3) {
+    margin-left: 1.5rem;
+    font-size: 1.45rem;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(.h3-content) {
+    padding-left: 1.5rem;
+  }
+
+  .note-content :global(blockquote) {
+    border-left: 3px solid var(--mint);
+    padding-left: 1.5rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+    font-size: 1.15rem;
+    margin: 1.5rem 0;
+  }
+
+  .note-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .note-eyebrow .tag {
+    padding: 0.2rem 0.75rem;
+    font-size: 0.6rem;
+    text-decoration: none;
+    transition: opacity var(--transition);
+  }
+  .note-eyebrow .tag:hover { opacity: 0.75; }
+  .note-eyebrow .tag.mint {
+    border: 1px solid var(--mint);
+    color: var(--mint);
+  }
+</style>
