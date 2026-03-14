@@ -3,7 +3,7 @@ title: 'SCIST x SCAICT 聯合寒訓'
 pubDate: 2026-03-03
 description: "Maybe it's start of everythings?"
 author: '235'
-tags: ['event', 'hackathon']
+tags: ['event', 'hackathon','scist','scaict']
 category: 'camp log'
 ---
 

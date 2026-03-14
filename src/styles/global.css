@@ -174,7 +174,7 @@ a:hover { color: var(--lavender); }
   }
   .nav-links a {
     display: block;
-    text-align: center;
+    text-align: left;
     padding: 0.7rem 1rem;
   }
   :has(.menu[aria-expanded="true"]) .nav-links {
@@ -267,7 +267,12 @@ footer a:hover { color: var(--lavender); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .animate-in {
-  animation: fadeInUp 0.55s ease forwards;
+  opacity: 1;
+  animation: fadeInUp 0.55s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in { animation: none; }
 }
 
 /* ---- Code blocks ---- */
