@@ -7,7 +7,7 @@ updatedDate: 2026-03-09
 ---
 
 ## Setting
----
+
 ```terminal
 git config --global user.name ”your_name”      //設定用戶名
 git config --global user.email your_email      //設定用戶email
@@ -17,7 +17,7 @@ git config --global --list                     //顯示剛才的設定
 `--global` 對所有==倉庫==生效  
 `--system` 對所有==用戶==生效
 ## Repository
----
+
 ```terminal
 git init      //創建倉庫
 git status    //查看倉庫狀態
@@ -27,13 +27,13 @@ git commit    //提交到倉庫
 git ls-files  //查看暫存區中的文件
 git rm        //移除暫存區與工作區的文件
 ```
-### git log
+### Git log
 `--online`    查看==簡潔的==提交紀錄
-### git commit
+### Git commit
 `-m`    後面加上指定的commit名稱，如果不加 `-m` 會進入文本編輯器叫你加  
 `-a` 一次完成添==加暫存跟提交==   兩個動作
-## version
----
+## Version
+
 ```terminal!
 git reset //回退版本
 git diff  //比較版本差異
@@ -53,8 +53,8 @@ git diff  //比較版本差異
    - `commit_id HEAD`    比較commit_id版本跟當前分支最新提交節點的差異
    - `HEAD~3 HEAD` 顯示三個版本理的所有差異，後面加上文件名就會直接顯示==該文件的差異內容==
 
-## branch
----
+## Branch
+
 ```terminal
 git branch     //分支
 git switch     //切換分支
@@ -77,8 +77,8 @@ git rebase
 
 1. 雖然也可以切換分支但是會跟另一個功能卡到
 
-## github
----
+## Github
+
 ```
 git remote add origin "github_ssh"
 git push --set-upstream origin main

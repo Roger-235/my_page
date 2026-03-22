@@ -15,7 +15,10 @@ export default defineConfig({
     remarkPlugins: [remarkReadingTime, remarkMark],
     rehypePlugins: [rehypeWrapH3],
     shikiConfig: {
-      theme: 'rose-pine-dawn',
+      themes: {
+        light: 'rose-pine-dawn',
+        dark: 'rose-pine-moon',
+      },
     },
   },
 });

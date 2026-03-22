@@ -9,9 +9,11 @@ interface Props {
     tags?: string[];
     updatedDate?: string;
   };
+  headings: { depth: number; slug: string; text: string }[];
 }
 
-const { frontmatter } = Astro.props;
+const { frontmatter, headings = [] } = Astro.props;
+const h2s = headings.filter(h => h.depth === 2);
 const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
   year: 'numeric',
   month: 'long',
@@ -55,8 +57,21 @@ const updatedDate = frontmatter.updatedDate
       </div>
     </div>
 
-    <div class="note-content">
-      <slot />
+    <div class="note-body">
+      {h2s.length > 0 && (
+        <nav class="toc">
+          <p class="toc-title">索引</p>
+          <ol>
+            {h2s.map(h => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </nav>
+      )}
+
+      <div class="note-content">
+        <slot />
+      </div>
     </div>
 
     <div class="note-footer">
@@ -69,8 +84,21 @@ const updatedDate = frontmatter.updatedDate
 
 <style>
   .note {
-    max-width: 680px;
+    max-width: 100%;
     margin: 0 auto;
+  }
+
+  .note-body {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 700px) {
+    .note-body {
+      grid-template-columns: 1fr;
+    }
   }
 
   .note-banner {
@@ -153,8 +181,69 @@ const updatedDate = frontmatter.updatedDate
     color: var(--mint);
   }
 
+  .toc {
+    border-left: 2px solid var(--text-muted);
+    padding-left: 1rem;
+    position: sticky;
+    top: 5rem;
+  }
+
+  .toc-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .toc a {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .toc a:hover { color: var(--text); }
+
   .note-content {
     line-height: 1.85;
+  }
+
+  .note-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+  }
+
+  .note-content :global(th),
+  .note-content :global(td) {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .note-content :global(th) {
+    background: var(--surface);
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .note-content :global(tr:nth-child(even) td) {
+    background: var(--surface);
+  }
+
+  .note-content :global(h2) {
+    margin: 2rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--text-muted);
   }
 
   .note-content :global(h3) {
