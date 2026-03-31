@@ -5,6 +5,7 @@ import pagefind from 'astro-pagefind';
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs';
 import { remarkMark } from './src/plugins/remark-mark.mjs';
 import { rehypeWrapH3 } from './src/plugins/rehype-wrap-h3.mjs';
+import { remarkDirective, remarkCallout } from './src/plugins/remark-callout.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,7 +13,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   integrations: [sitemap(), pagefind()],
   markdown: {
-    remarkPlugins: [remarkReadingTime, remarkMark],
+    remarkPlugins: [remarkReadingTime, remarkMark, remarkDirective, remarkCallout],
     rehypePlugins: [rehypeWrapH3],
     shikiConfig: {
       themes: {

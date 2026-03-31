@@ -13,7 +13,18 @@ interface Props {
 }
 
 const { frontmatter, headings = [] } = Astro.props;
-const h2s = headings.filter(h => h.depth === 2);
+
+// Group h3s under their parent h2
+type Heading = { depth: number; slug: string; text: string };
+type TocItem = Heading & { children: Heading[] };
+const tocItems: TocItem[] = [];
+for (const h of headings) {
+  if (h.depth === 2) {
+    tocItems.push({ ...h, children: [] });
+  } else if (h.depth === 3 && tocItems.length > 0) {
+    tocItems[tocItems.length - 1].children.push(h);
+  }
+}
 const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
   year: 'numeric',
   month: 'long',
@@ -58,12 +69,25 @@ const updatedDate = frontmatter.updatedDate
     </div>
 
     <div class="note-body">
-      {h2s.length > 0 && (
+      {tocItems.length > 0 && (
         <nav class="toc">
           <p class="toc-title">索引</p>
           <ol>
-            {h2s.map(h => (
-              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            {tocItems.map((h: TocItem) => (
+              <li class="toc-h2">
+                <a href={`#${h.slug}`} data-id={h.slug}>{h.text}</a>
+                {h.children.length > 0 && (
+                  <div class="toc-sub-wrap">
+                    <ol class="toc-sub">
+                      {h.children.map((sub: Heading) => (
+                        <li class="toc-h3">
+                          <a href={`#${sub.slug}`} data-id={sub.slug}>{sub.text}</a>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+              </li>
             ))}
           </ol>
         </nav>
@@ -205,12 +229,55 @@ const updatedDate = frontmatter.updatedDate
   }
 
   .toc a {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: var(--text-muted);
     text-decoration: none;
     transition: color var(--transition);
+    line-height: 1.4;
+    display: block;
   }
   .toc a:hover { color: var(--text); }
+  .toc a.active {
+    color: var(--mint);
+  }
+
+  .toc-h2 > a {
+    font-weight: 600;
+  }
+
+  .toc-sub-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease,
+      margin-top 0.3s ease;
+    margin-top: 0;
+  }
+
+  .toc-h2.open > .toc-sub-wrap,
+  .toc-h2:hover > .toc-sub-wrap {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 0.25rem;
+  }
+
+  .toc-sub {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .toc-h3 {
+    padding-left: 0.75rem;
+  }
+  .toc-h3 a {
+    font-size: 0.75rem;
+  }
 
   .note-content {
     line-height: 1.85;
@@ -221,6 +288,7 @@ const updatedDate = frontmatter.updatedDate
     border-collapse: collapse;
     margin: 1.5rem 0;
     font-size: 0.9rem;
+    font-family: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
   }
 
   .note-content :global(th),
@@ -244,9 +312,12 @@ const updatedDate = frontmatter.updatedDate
     margin: 2rem 0 0.75rem;
     padding-bottom: 0.4rem;
     border-bottom: 2px solid var(--text-muted);
+    scroll-margin-top: 5rem;
   }
 
   .note-content :global(h3) {
+    scroll-margin-top: 5rem;
+    margin-top: 1.75rem;
     margin-left: 1.5rem;
     font-size: 1.45rem;
     margin-bottom: 0.5rem;
@@ -284,3 +355,39 @@ const updatedDate = frontmatter.updatedDate
     color: var(--mint);
   }
 </style>
+
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('.toc a[data-id]');
+  if (links.length > 0) {
+    const ids = Array.from(links).map(a => a.dataset.id!);
+    const headings = ids.map(id => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const h2Items = document.querySelectorAll<HTMLLIElement>('.toc-h2');
+
+    let active = '';
+
+    const updateActive = () => {
+      links.forEach(a => a.classList.toggle('active', a.dataset.id === active));
+
+      // Open the parent h2 li if active id is inside it
+      h2Items.forEach(li => {
+        const ids = Array.from(li.querySelectorAll<HTMLAnchorElement>('a[data-id]'))
+          .map(a => a.dataset.id!);
+        li.classList.toggle('open', ids.includes(active));
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            active = entry.target.id;
+          }
+        }
+        updateActive();
+      },
+      { rootMargin: '-80px 0px -60% 0px', threshold: 0 }
+    );
+
+    headings.forEach(h => observer.observe(h));
+  }
+</script>

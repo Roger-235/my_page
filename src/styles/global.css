@@ -35,6 +35,10 @@ html[data-theme="dark"] {
   --shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
+::marker {
+  color: var(--text-muted);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -43,21 +47,6 @@ html[data-theme="dark"] {
 
 html {
   background-color: var(--bg);
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(180, 140, 90, 0.04) 2px,
-      rgba(180, 140, 90, 0.04) 3px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 4px,
-      rgba(180, 140, 90, 0.03) 4px,
-      rgba(180, 140, 90, 0.03) 5px
-    );
   font-family: 'Jost', 'Noto Sans TC', 'PingFang TC', sans-serif;
   scroll-behavior: smooth;
 }
@@ -79,6 +68,22 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(180, 140, 90, 0.04) 2px,
+      rgba(180, 140, 90, 0.04) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 4px,
+      rgba(180, 140, 90, 0.03) 4px,
+      rgba(180, 140, 90, 0.03) 5px
+    );
 }
 
 main {
@@ -282,7 +287,7 @@ footer a:hover { color: var(--lavender); }
 /* ---- Animations ---- */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: none; }
 }
 .animate-in {
   opacity: 1;
@@ -324,8 +329,45 @@ html[data-theme="dark"] pre.astro-code span {
 }
 
 mark {
-  background: #e8b48a;
-  color: #1a1008;
-  border-radius: var(--radius-sm);
-  padding: 0.05em 0.25em;
+  background: #f5df8a;
+  color: #5a3d00;
+  border-radius: 2px;
+  padding: 0.05em 0.2em;
 }
+
+html[data-theme="dark"] mark {
+  background: #4a3c08;
+  color: #e8cc5a;
+}
+
+/* Callouts :::type */
+.callout {
+  border-left: 3px solid var(--border);
+  background: var(--surface);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.75rem 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.callout-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.callout-note   { border-color: var(--lavender); }
+.callout-note   .callout-label { color: var(--lavender); }
+
+.callout-tip    { border-color: var(--mint); }
+.callout-tip    .callout-label { color: var(--mint); }
+
+.callout-warning { border-color: var(--mint); }
+.callout-warning .callout-label { color: var(--mint); }
+
+.callout-danger { border-color: var(--pink); }
+.callout-danger .callout-label { color: var(--pink); }
+
+.callout-info   { border-color: var(--lavender); }
+.callout-info   .callout-label { color: var(--lavender); }
