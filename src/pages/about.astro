@@ -1,9 +1,10 @@
 ---
+import { discriminatedUnion } from 'astro:schema';
 import Layout from '../layouts/Layout.astro';
 
 const identity = {
-  occupation: "就讀高科大電子工程系一年級",
-  hobbies: ["程式設計", "j-pop", "動漫", "遊戲", "電腦", "健身", "腳踏車", "排球", "美股", "基本經濟概論", "哲學", "心理學"],
+  occupation: "就讀高雄某學店電子工程系一年級",
+  hobbies: ["程式設計", "j-pop", "動漫", "遊戲", "電腦", "健身", "腳踏車", "排球", "美股", "基本經濟概論", "哲學", "心理學","寫文章"],
 };
 
 const skillcards = [
@@ -19,6 +20,10 @@ const skillcards = [
     name: "動漫",
     description: "",
   },
+  {
+    name:"寫文章",
+    description: "其實我不太會寫文章，從國小開始我的作文一直沒有好過，所以你看我的部落格應該會看得很痛苦。"
+  }
 ];
 ---
 <Layout title="關於我 · 235's page">
