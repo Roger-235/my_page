@@ -1,7 +1,7 @@
 ---
 title: 'Hello world!!!'
 pubDate: 2026-02-15
-description: 'First post in my blog'
+description: "First post in my blog"
 author: '235'
 tags: [first]
 category: 'learning'
