@@ -13,17 +13,25 @@ const skillcards = [
     description: "高三開始接觸程式的一個新手小白，對演算法跟ai的基本概論有興趣，被各位大神電爛之後正在高速成長中...",
   },
   {
-    name: "j-pop",
-    description: "",
+    name: "排球",
+    description: "高中打了快三年的排球，雖然上大學比較少打了但如果有人揪我還是會去打。",
   },
   {
     name: "動漫",
     description: "",
   },
   {
-    name:"寫文章",
-    description: "其實我不太會寫文章，從國小開始我的作文一直沒有好過，所以你看我的部落格應該會看得很痛苦。"
-  }
+    name: "寫文章",
+    description: "其實我不太會寫文章，從國小開始我的作文一直沒有好過，所以你看我的部落格應該會看得很痛苦，我打的這些就算是垃圾也是我生出來的垃圾!",
+  },
+  {
+    name: "工業控制",
+    description: "在高中打了一年多的選手但其實也沒東厲害，打過三菱跟omron的控制器但都忘得差不多了",
+  },
+  {
+    name: "美股",
+    description: "好像是高一趁著某次美元大跌賺了不少錢就跳進了這個坑，目前是特斯拉信仰者。",
+  },
 ];
 ---
 <Layout title="關於我 · 235's page">
@@ -38,13 +46,13 @@ const skillcards = [
 
 	<div class="section-card">
       <h2>關於 </h2>
-      <p>我是 yo，但是似乎 235 更順耳所以也可以叫我 235。</p>
+      <p>這裡是235</p>
 	  <p>目前{identity.occupation}</p>
     </div>
 
 	
     <div class="section-card">
-      <h2>關鍵字</h2>
+      <h2>key words</h2>
       <div class="tags-wrap">
         {identity.hobbies.map((hobby, i) => (
           <span class={`tag ${i % 3 === 1 ? 'lavender' : i % 3 === 2 ? 'mint' : ''}`}>{hobby}</span>
@@ -56,7 +64,7 @@ const skillcards = [
 
     {skillcards.filter(s => s.description).length > 0 && (
       <div class="section-card">
-        <h2>技能</h2>
+        <h2>skills</h2>
         <div class="skill-grid">
           {skillcards.filter(s => s.description).map(skill => (
             <div class="card skill-card">
