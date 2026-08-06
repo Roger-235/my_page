@@ -1,0 +1,222 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/roll/*.{jpeg,jpg,png,webp}',
+  { eager: true }
+);
+
+const links = [
+  {
+    name: "威忌",
+    url: "https://www.windson.cc/",
+    description: "哥們 這東西不是應該你寫嗎",
+    image: "https://gravatar.com/avatar/932e22160c9aeb41469a8c0ece40b38b0a62bd10598009d35a94e30dcb48b64d?v=1764580811000&size=512&d=initials",
+  },
+  {
+    name: "水餃",
+    url: "https://nian0412.github.io/zh-TW",
+    description: "萬能的小隊輔",
+    image: "q.png",
+  },
+  {
+    name: "OsGa",
+    url: "https://blog.osga.dev/",
+    description: "真的不跟我換badge嗎",
+    image: "https://raw.githubusercontent.com/osga24/osga24/main/public/me.png",
+  },
+  {
+    name: "PG",
+    url: "https://pg72.tw",
+    description: "湊企鵝",
+    image: "https://pg72.tw/avatar.png",
+  },
+];
+---
+<Layout title="Blog Roll · 235's page">
+  <section class="roll animate-in">
+
+    <div class="page-header">
+      <div class="page-eyebrow">Links</div>
+      <h1>Blog Roll</h1>
+      <p class="subtitle">一些值得逛逛的部落格與網站</p>
+    </div>
+
+    <div class="roll-grid">
+      {links.map(link => {
+        const isRemote = /^https?:\/\//.test(link.image);
+        const img = isRemote ? null : images[`../assets/roll/${link.image}`];
+        return (
+          <a href={link.url} target="_blank" rel="noopener noreferrer" class="card roll-card">
+            {isRemote ? (
+              <img src={link.image} alt={link.name} class="roll-image" loading="lazy" width="144" height="144" />
+            ) : img ? (
+              <Image src={img.default} alt={link.name} class="roll-image" width={144} height={144} />
+            ) : (
+              <div class="roll-image roll-image-placeholder">
+                <span>缺圖</span>
+              </div>
+            )}
+            <div class="roll-body">
+              <div class="roll-card-head">
+                <h3>{link.name}</h3>
+                <span class="roll-arrow">↗</span>
+              </div>
+              <p class="roll-desc">{link.description}</p>
+              <div class="roll-card-foot">
+                <span class="roll-url">{link.url.replace(/^https?:\/\//, '')}</span>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
+  </section>
+</Layout>
+
+<style>
+  .roll {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    padding: 2rem 0 2rem;
+    border-bottom: 2px solid var(--text);
+    margin-bottom: 2.5rem;
+  }
+
+  .page-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .page-header h1 {
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 0.93rem;
+    font-style: italic;
+    font-family: 'EB Garamond', serif;
+  }
+
+  .roll-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .roll-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .roll-card {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: inherit;
+    text-decoration: none;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .roll-image {
+    display: block;
+    flex: 0 0 72px;
+    width: 72px;
+    height: 72px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+    border-right: none;
+    margin: 0.85rem 0 0.85rem 0.85rem;
+  }
+
+  .roll-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.6rem;
+    line-height: 1.2;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    border-radius: 50%;
+  }
+
+  .roll-body {
+    flex: 1;
+    min-width: 0;
+    padding: 0.85rem 1rem;
+  }
+
+  .roll-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .roll-card-head h3 {
+    font-size: 1rem;
+    color: var(--text);
+    transition: color var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .roll-card:hover .roll-card-head h3 {
+    color: var(--pink);
+  }
+
+  .roll-arrow {
+    flex: 0 0 auto;
+    color: var(--border);
+    font-size: 0.9rem;
+    transition: color var(--transition);
+  }
+  .roll-card:hover .roll-arrow {
+    color: var(--pink);
+  }
+
+  .roll-desc {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-bottom: 0.35rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .roll-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .roll-url {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
