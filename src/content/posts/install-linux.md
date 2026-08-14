@@ -3,7 +3,7 @@ title: 'Linux 初心者'
 pubDate: 2026-03-06
 description: "everyone needs to install linux"
 author: '235'
-tags: ['linux', 'diary']
+tags: ['linux']
 category: 'learning'
 ---
 

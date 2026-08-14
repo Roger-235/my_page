@@ -127,6 +127,14 @@ const date = new Date(frontmatter.pubDate).toLocaleDateString('zh-TW', {
     font-size: 1.15rem;
     margin: 1.5rem 0;
   }
+  .post-content :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 1.75rem auto;
+  }
 
   .post-footer {
     padding-top: 2rem;

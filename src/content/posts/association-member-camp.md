@@ -3,7 +3,7 @@ title: '115社團負責人研習營'
 pubDate: 2026-07-23
 description: "different place"
 author: '235'
-tags: ['event','school','camp']
+tags: ['event', 'school', 'camp', 'diary']
 category: 'student association'
 ---
 
