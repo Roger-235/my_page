@@ -1,7 +1,7 @@
 ---
 title: C++
 pubDate: 2026-03-22
-description: 偏向底層邏輯的中階程式語言
+description: 似乎是競程的常用工具
 tags: [cpp,dev]
 updatedDate: 2026-03-31
 ---
