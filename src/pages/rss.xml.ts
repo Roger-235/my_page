@@ -23,7 +23,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: "235's Blog",
-    description: '今天又更新了一點東西',
+    description: '看什麼看',
     site: context.site!,
     items,
   });
