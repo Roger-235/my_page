@@ -3,7 +3,7 @@ title: 'IONC 競程營隊'
 pubDate: 2026-08-10
 description: "I need more sleep"
 author: '235'
-tags: ['event', 'diary', 'program']
+tags: ['dev' ,'diary']
 category: 'camp log'
 ---
 

@@ -3,7 +3,7 @@ title: '115電子與觀光聯合系烤'
 pubDate: 2026-05-30
 description: "it's fucking tired"
 author: '235'
-tags: ['event', 'school', 'diary']
+tags: ['event', 'school', 'preparatory']
 category: 'student association'
 ---
 

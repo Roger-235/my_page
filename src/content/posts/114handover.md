@@ -3,7 +3,7 @@ title: '社團交接'
 pubDate: 2026-08-16
 description: "fog is all around me"
 author: '235'
-tags: ['event', 'school', 'camp', 'diary']
+tags: ['school', 'camp', 'diary']
 category: 'student association'
 ---
 

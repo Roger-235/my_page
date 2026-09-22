@@ -3,7 +3,7 @@ title: 'Campfire2026'
 pubDate: 2026-03-13
 description: 'Can someone just break into my room and force a ring on my finger already?'
 author: '235'
-tags: ['event', 'program', 'diary']
+tags: ['event', 'dev']
 category: 'camp log'
 ---
 
